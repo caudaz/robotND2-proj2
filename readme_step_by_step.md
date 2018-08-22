@@ -365,7 +365,7 @@ The hokuyo sensor can be added to your robot model just like the camera sensor. 
 * inertia - ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6"
 Don't forget to define the joint type, and the parent and child links!
 ```
- mkdir ~/catkin_ws/src/udacity_bot/meshes
+mkdir ~/catkin_ws/src/udacity_bot/meshes
 cd meshes
 wget  https://raw.githubusercontent.com/udacity/RoboND-Localization-Project/master/meshes/hokuyo.dae
 ```
@@ -410,10 +410,10 @@ roslaunch udacity_bot udacity_world.launch
 * A plugin for the hokuyo sensor.
 * A plugin for controlling the wheel joints.
 
-
->cd ~/catkin_ws/src/udacity_bot/urdf
->wget https://raw.githubusercontent.com/udacity/RoboND-Localization-Project/master/urdf/udacity_bot.gazebo
-
+```
+cd ~/catkin_ws/src/udacity_bot/urdf
+wget https://raw.githubusercontent.com/udacity/RoboND-Localization-Project/master/urdf/udacity_bot.gazebo
+```
 
 make sure that your plugins are imported by your URDF as well:
 ```
@@ -471,9 +471,6 @@ Add the following after the first “param” definition.
 
 <!-- Send robot states to tf -->
  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen"/>
-
-
-
 
 
 Next, you need to launch RViz along with Gazebo.
@@ -662,17 +659,26 @@ Whoa! Those warnings don't look good. The amcl.launch file is throwing a lot of 
 
 
 8A- Transform Timeout
+
 This maximum amount of delay or latency allowed between transforms is defined by the transform_tolerance parameter.
--Tune amcl node in amcl.launch file (under src/udacity_bot/launch) 
+
+-Tune amcl node in amcl.launch file (under src/udacity_bot/launch)
+
 transform_tolerance: 0.2
+
 -Tune move_base node in the costmap_common_params.yaml file (under src/udacity_bot/config)
+
 <param name="transform_tolerance" value="0.2"/>
+
 Tuning the value for this parameter is usually dependent on your system. Once you have the transform_tolerance variable defined and tuned properly, you should be able to visualize all the three maps in RViz without any issues, and the warning should disappear. Only to be replaced by a new warning.
 
 
 ## 8B- Map Update Loop ##
-The warning seems to indicate that your map or costmaps are not getting updated fast enough. The update loop is taking longer than the desired frequency rate of 50 Hz or 0.02 seconds. 
+
+The warning seems to indicate that your map or costmaps are not getting updated fast enough. The update loop is taking longer than the desired frequency rate of 50 Hz or 0.02 seconds.
+
 On costmap_common_params.yaml :
+
 -update_frequency: 10.0 (frequency with which your map is getting updated)
 -publish_frequency: 10.0 (frequency with which your map is getting published)
 
@@ -681,11 +687,14 @@ Try running your project again, and define a goal position using the "2D Nav Goa
 
 
 ## 8C-you can also modify: ##
+
 Apart from tuning the frequency with which your map is getting updated and published, you can also modify the dimension and resolution of your global and local costmaps.
+
 local_costmap_params.yaml :
    width:  5.0   # original 20.0
    height: 5.0   # original 20.0
    resolution: 0.05
+   
 global_costmap_params.yaml :
    width:  15.0 # original 40.0
    height: 15.0 # original 40.0
@@ -693,14 +702,11 @@ global_costmap_params.yaml :
 
 
 Modifying these parameters can help free up some resources, however, decreasing the resolution of your map by too much can lead to loss of valuable information too. For example, in case of small passages, low resolution might cause the obstacle regions to overlap in the local costmap, and the robot might not be able to find a path through the passage.
+
 Note: Modifying the above two parameters might help with the overall response, but it could potentially also help with ensuring that your robot is able to follow the defined local path. This might come in handy to experiment with later as well.
 
 
-
-
 Try running your project again, and define a goal position using the "2D Nav Goal" button in RViz, a short distance from your robot. Your robot should start moving! That's brilliant! But, it doesn't seem to be following the path and might be hitting the walls.
-
-
 
 
 ## 9-Localization Parameter Tuning 2 ##
@@ -710,19 +716,26 @@ raytrace_range: 0.0
 inflation_radius: 0.0
 
 * obstacle_range - For example, if set to 0.1, that implies that if the obstacle detected by a laser sensor is within 0.1 meters from the base of the robot, that obstacle will be added to the costmap. Tuning this parameter can help with discarding noise, falsely detecting obstacles, and even with computational costs.
+
 * raytrace_range - This parameter is used to clear and update the free space in the costmap as the robot moves.
+
 * inflation_radius - This parameter determines the minimum distance between the robot geometry and the obstacles. Try setting a really high value for this parameter, and launch the project and select the global costmap selected. You will notice that the obstacles (the walls of the environment) seem to be "inflated" as can be seen below. An appropriate value for this parameter can ensure that the robot smoothly navigates through the map, without bumping into the walls and getting stuck, and can even pass through any narrow pathways.
 
 
-To tune the above three parameters, we recommend the following approaches. In each case observe the differences to judge what value works best for this map -
+To tune the above three parameters, we recommend the following approaches. In each case observe the differences to judge what value works best for this map
+
 1. Try setting a high value for inflation radius first (10.0), and have the robot navigate to your choice of a goal position. Then repeat the same with a low value(0.1)
+
 2. Next, set the values for the obstacle (3.0) and raytracing (3.0) ranges and have the robot navigate to a position, again. Try to see if it can effectively navigate through the narrow passage and then take a turn.
+
 3. Add an object, such as the Brick Box in Gazebo, as shown below. Try to observe how your previously selected parameter values behave with an object blocking part of the map. Note: This is only for testing purposes, and is not meant to be part of your project.
 In each of the above cases, compare the results for both the global costmap and the local costmap.
 
 
 It is highly recommended that you go through the documentation corresponding to these packages, and the associated parameters and identify which ones could help improve your results:
+
 http://wiki.ros.org/costmap_2d
+
 http://wiki.ros.org/navigation/Tutorials/RobotSetup
 
 
@@ -734,6 +747,7 @@ Overall Filter
 * min_particles and max_particles - tuned based on your system specifications. A larger range, with a high maximum might be too computationally extensive for a low-end system.
 * initial_pose - For the project, you should set the position to [0, 0]. Feel free to play around with the mean yaw value.
 * update_min* - amcl relies on incoming laser scans. Upon receiving a scan, it checks the values for update_min_a and update_min_d and compares to how far the robot has moved. Based on this comparison it decides whether or not to perform a filter update or to discard the scan data. Discarding data could result in poorer localization results, and too many frequent filter updates for a fast moving robot could also cause computational problems.
+
 Laser
 There are two different types of models to consider under this - the likelihood_field and the beam. Each of these models defines how the laser rangefinder sensor estimates the obstacles in relation to the robot.
 The likelihood_field model is usually more computationally efficient and reliable for an environment such as the one you are working with. So you can focus on parameters for that particular model such as the -
@@ -741,6 +755,7 @@ The likelihood_field model is usually more computationally efficient and reliabl
 * laser_max_beams
 * laser_z_hit and laser_z_rand
 Tuning of these parameters will have to be experimental. While tuning them, observe the laser scan information in RViz and try to make sure that the laser scan matches or is aligned with the actual map, and how it gets updated as the robot moves. The better the estimation of where the obstacles are, the better the localization results.
+
 Odometry
 odom_model_type - Since you are working with a differential drive mobile robot, it’s best to use the diff-corrected type. There are additional parameters that are specific to this type - the odom_alphas (1 through 4). These parameters define how much noise is expected from the robot's movements/motions as it navigates inside the map.
 Note: The odometry information for this project is received directly from Gazebo, and is equivalent to the ground truth value (no noise expected). So, you need not have to tune these parameters and can leave them at their default values. But feel free to experiment with some values and see if you notice any changes.
@@ -751,10 +766,15 @@ Identifying and tuning all these parameters can take time and effort. But don't 
 
 
 ## 10A-Testing ##
+
 test your implementation on a shorter path rather than the entire map.
+
 The pose your robot starts with places it somewhere in the middle of a corridor. It is recommended that you carry out some initial tests across the length of that corridor before the robot takes a turn. This will help you figure out several aspects to improve your implementation. You can figure out if the robot gets stuck or not initially based on where it thinks are the walls with respect to its position, how quickly the robot moves and how quickly it sticks to the trajectory, and more importantly how good the PoseArray looks as the robot moves forward. Does it shrink or get worse?
+
 You can easily carry out these tests using the 2D Nav Goal button in RViz’ toolbar, as we covered in another section.
+
 ## 10B-Launching ##
+
 The above method is great for testing, but for your project submission your robot needs to navigate to a specific goal position while localizing itself along the way. In the project repo we have provided you with a C++ node that will navigate the robot to the goal position for you. You will need to create a new folder for that.
 ```
 cd /home/workspace/catkin_ws/src/udacity_bot
