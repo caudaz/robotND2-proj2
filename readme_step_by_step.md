@@ -19,28 +19,32 @@ You now have two new directories: build and devel. The aptly named build directo
 
 
 
-## 1- Overview ##
-$ sudo apt-get install ros-kinetic-navigation
-$ sudo apt-get install ros-kinetic-map-server
-$ sudo apt-get install ros-kinetic-move-base
-$ rospack profile
-$ sudo apt-get install ros-kinetic-amcl
-
+## 1- Download necessary packages ##
+```
+sudo apt-get install ros-kinetic-navigation
+sudo apt-get install ros-kinetic-map-server
+sudo apt-get install ros-kinetic-move-base
+rospack profile
+sudo apt-get install ros-kinetic-amcl
+```
 
 
 
 
 
 ## 2- Gazebo Hello World ##
+```
 cd /home/workspace/catkin_ws/src/
 catkin_create_pkg udacity_bot
-$ cd udacity_bot
-$ mkdir launch
-$ mkdir worlds
+cd udacity_bot
+mkdir launch
+mkdir worlds
+```
 
-
+```
 $ cd worlds
 $ nano udacity.world
+```
 
 Add the following to udacity.world
 <?xml version="1.0" ?>
@@ -70,10 +74,11 @@ Add the following to udacity.world
 </sdf>
 
 
-
-$ cd ..
-$ cd launch
-$ nano udacity_world.launch
+```
+cd ..
+cd launch
+nano udacity_world.launch
+```
 
 Add the following to your launch file.
 <?xml version="1.0" encoding="UTF-8"?>
@@ -99,25 +104,21 @@ Add the following to your launch file.
 </launch>
 
 
-
-
-
-
-
-$ cd /home/workspace/catkin_ws/
-$ catkin_make
-$ source devel/setup.bash
-$ roslaunch udacity_bot udacity_world.launch
-
-
+```
+cd /home/workspace/catkin_ws/
+catkin_make
+source devel/setup.bash
+roslaunch udacity_bot udacity_world.launch
+```
 
 
 ## 3-Robot Model: Basic Setup ##
-$ cd /home/workspace/catkin_ws/src/udacity_bot/
-$ mkdir urdf
-$ cd urdf
-$ nano udacity_bot.xacro
-
+```
+cd /home/workspace/catkin_ws/src/udacity_bot/
+mkdir urdf
+cd urdf
+nano udacity_bot.xacro
+```
 
 Copy the following code into your udacity_bot.xacro file. 
 <?xml version='1.0'?>
@@ -193,10 +194,10 @@ Copy the following code into your udacity_bot.xacro file.
 </robot>
 
 
-
-$ cd /home/workspace/catkin_ws/src/udacity_bot/launch/
-$ nano robot_description.launch
-
+```
+cd /home/workspace/catkin_ws/src/udacity_bot/launch/
+nano robot_description.launch
+```
 
 Copy the following into the above file.
 <?xml version="1.0"?>
@@ -207,8 +208,9 @@ Copy the following into the above file.
 
 </launch>
 
-$ nano udacity_world.launch
-
+```
+nano udacity_world.launch
+```
 
 Add the following to the launch file (after <launch>)
 <include file="$(find udacity_bot)/launch/robot_description.launch"/>
@@ -219,16 +221,16 @@ Add the following to the launch file (before </launch>)
 <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" 
 output="screen" args="-urdf -param robot_description -model udacity_bot"/>
 
-$ cd /home/workspace/catkin_ws/
-$ catkin_make
-$ source devel/setup.bash
-$ roslaunch udacity_bot udacity_world.launch
+```
+cd /home/workspace/catkin_ws/
+catkin_make
+source devel/setup.bash
+roslaunch udacity_bot udacity_world.launch
+```
 
-
-
-
+```
 cd /catkin_ws/src/udacity_bot/urdf
-
+```
 
 edit udacity_bot.xacro, ADD:
   <link name='left_wheel'>
@@ -301,17 +303,20 @@ edit udacity_bot.xacro, ADD:
   </joint>
 
 
-$ cd /home/workspace/catkin_ws/
-$ catkin_make
-$ source devel/setup.bash
-$ roslaunch udacity_bot udacity_world.launch
-
+```
+cd /home/workspace/catkin_ws/
+catkin_make
+source devel/setup.bash
+roslaunch udacity_bot udacity_world.launch
+```
 
 
 
 ## 4- Let there be sight ##
-$ cd /home/workspace/catkin_ws/src/udacity_bot/urdf
-$ nano udacity_bot.xacro
+```
+cd /home/workspace/catkin_ws/src/udacity_bot/urdf
+nano udacity_bot.xacro
+```
 And add a camera sensor based on the following specifications -
 * link name - "camera"
 * link origin - "[0, 0, 0, 0, 0, 0]"
@@ -359,10 +364,11 @@ The hokuyo sensor can be added to your robot model just like the camera sensor. 
 * mass - "0.1"
 * inertia - ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6"
 Don't forget to define the joint type, and the parent and child links!
->mkdir ~/catkin_ws/src/udacity_bot/meshes
->cd meshes
->wget  https://raw.githubusercontent.com/udacity/RoboND-Localization-Project/master/meshes/hokuyo.dae
-
+```
+ mkdir ~/catkin_ws/src/udacity_bot/meshes
+cd meshes
+wget  https://raw.githubusercontent.com/udacity/RoboND-Localization-Project/master/meshes/hokuyo.dae
+```
 
   <link name='hokuyo'>
         <inertial>
@@ -391,12 +397,12 @@ Don't forget to define the joint type, and the parent and child links!
         <parent link="chassis"/>
   </joint>
 
-
-$ cd /home/workspace/catkin_ws/
-$ catkin_make
-$ source devel/setup.bash
-$ roslaunch udacity_bot udacity_world.launch
-
+```
+cd /home/workspace/catkin_ws/
+catkin_make
+source devel/setup.bash
+roslaunch udacity_bot udacity_world.launch
+```
 
 
 
@@ -410,17 +416,20 @@ $ roslaunch udacity_bot udacity_world.launch
 
 
 make sure that your plugins are imported by your URDF as well:
-$ cd /home/workspace/catkin_ws/src/udacity_bot/urdf
-$ nano udacity_bot.xacro
+```
+cd /home/workspace/catkin_ws/src/udacity_bot/urdf
+nano udacity_bot.xacro
+```
 
 Add the following to the top of the file (right before you define the robot_footprint link)
 <xacro:include filename="$(find udacity_bot)/urdf/udacity_bot.gazebo" />
 
-$ cd /home/workspace/catkin_ws/
-$ catkin_make
-$ source devel/setup.bash
-$ roslaunch udacity_bot udacity_world.launch
-
+```
+cd /home/workspace/catkin_ws/
+catkin_make
+source devel/setup.bash
+roslaunch udacity_bot udacity_world.launch
+```
 
 Add color to .gazebo. Example:
   <gazebo reference="chassis">
@@ -438,18 +447,21 @@ Add color to .gazebo. Example:
   </gazebo>
 
 
-$ cd /home/workspace/catkin_ws/
-$ catkin_make
-$ source devel/setup.bash
-$ roslaunch udacity_bot udacity_world.launch
-
+```
+cd /home/workspace/catkin_ws/
+catkin_make
+source devel/setup.bash
+roslaunch udacity_bot udacity_world.launch
+```
 
 ## 5-RVIZ ##
 
 
 We will start with modifying the robot_description.launch file.
-$ cd /home/workspace/catkin_ws/src/udacity_bot/launch/
-$ nano robot_description.launch
+```
+cd /home/workspace/catkin_ws/src/udacity_bot/launch/
+nano robot_description.launch
+```
 
 Add the following after the first “param” definition.
 <!-- Send fake joint values-->
@@ -465,17 +477,20 @@ Add the following after the first “param” definition.
 
 
 Next, you need to launch RViz along with Gazebo.
-$ nano udacity_world.launch
+```
+nano udacity_world.launch
+```
 Add the following at the end of the file. After the urdf_spawner node definition:
 <!--launch rviz-->
 <node name="rviz" pkg="rviz" type="rviz" respawn="false"/>
 
 The above will create a node that launches the package rviz. Let's launch it:
-$ cd /home/workspace/catkin_ws/
-$ catkin_make
-$ source devel/setup.bash
-$ roslaunch udacity_bot udacity_world.launch
-
+```
+cd /home/workspace/catkin_ws/
+catkin_make
+source devel/setup.bash
+roslaunch udacity_bot udacity_world.launch
+```
 
 Select the RViz window, and on the left side, under Displays:
 * Select “odom” for fixed frame
@@ -502,42 +517,52 @@ angular:
 ## 6-Localization Map ##
 
 
-$ cd /home/workspace/catkin_ws/src/udacity_bot/
-$ mkdir maps
-$ cd maps
-$ wget https://github.com/udacity/RoboND-Localization-Project/blob/master/maps/jackal_race.pgm
+```cd /home/workspace/catkin_ws/src/udacity_bot/
+mkdir maps
+cd maps
+wget https://github.com/udacity/RoboND-Localization-Project/blob/master/maps/jackal_race.pgm
+```
 (Wget may not work for the .pgm , it may have to be downloaded from GITHUB and copy/paste into “maps” folder)
 
 
-$ wget https://raw.githubusercontent.com/udacity/RoboND-Localization-Project/master/maps/jackal_race.yaml
-
+```
+wget https://raw.githubusercontent.com/udacity/RoboND-Localization-Project/master/maps/jackal_race.yaml
+```
 
 Earlier on in this lesson, you created an empty Gazebo world, called udacity.world. The map that you will be working with is generated based on its own world.
-$ cd ..
-$ cd worlds
+```
+cd ..
+cd worlds
+```
 
 Copy the file jackal_race.world from the project repo into the “worlds” folder.
-$ wget https://raw.githubusercontent.com/udacity/RoboND-Localization-Project/master/worlds/jackal_race.world
+```
+wget https://raw.githubusercontent.com/udacity/RoboND-Localization-Project/master/worlds/jackal_race.world
+```
 
-
-Next, you will have to modify the udacity_world.launch file and update the path to this new map/world (
-$ cd ..
-$ cd launch/
-$ nano udacity_world.launch
+Next, you will have to modify the udacity_world.launch file and update the path to this new map/world:
+```
+cd ..
+cd launch/
+nano udacity_world.launch
+```
 Modify the argument world_name (from udacity.world TO jackal_race.world) 
 
 
-$ cd /home/workspace/catkin_ws/
-$ roslaunch udacity_bot udacity_world.launch
-
+```
+cd /home/workspace/catkin_ws/
+roslaunch udacity_bot udacity_world.launch
+```
 
 
 ## 7-AMCL ##
 
 
 We will start by creating a new launch file.
-$ cd /home/workspace/catkin_ws/src/udacity_bot/launch/
-$ nano amcl.launch
+```
+cd /home/workspace/catkin_ws/src/udacity_bot/launch/
+nano amcl.launch
+```
 
 This launch file has three nodes, one of which is for the amcl package. Copy the following into your launch file.
 <?xml version="1.0"?>
@@ -583,9 +608,11 @@ In the same launch file as above, copy the following code.
 
 
 move_base also has its own set of required parameters that help it perform efficiently. Let’s add those configuration files first:
-$ cd ..
-$ mkdir config
-$ cd config
+```
+cd ..
+mkdir config
+cd config
+```
 
 From the repo, copy the following files and add them here in config:
 * local_costmap_params.yaml
@@ -595,16 +622,21 @@ From the repo, copy the following files and add them here in config:
 The above files already have some set of parameters and some values defined for you to help you get started.
 
 
-$ wget https://raw.githubusercontent.com/udacity/RoboND-Localization-Project/master/config/base_local_planner_params.yaml
-$ wget https://raw.githubusercontent.com/udacity/RoboND-Localization-Project/master/config/costmap_common_params.yaml
-$ wget https://raw.githubusercontent.com/udacity/RoboND-Localization-Project/master/config/global_costmap_params.yaml
-$ wget https://raw.githubusercontent.com/udacity/RoboND-Localization-Project/master/config/local_costmap_params.yaml
+```
+wget https://raw.githubusercontent.com/udacity/RoboND-Localization-Project/master/config/base_local_planner_params.yaml
+wget https://raw.githubusercontent.com/udacity/RoboND-Localization-Project/master/config/costmap_common_params.yaml
+wget https://raw.githubusercontent.com/udacity/RoboND-Localization-Project/master/config/global_costmap_params.yaml
+wget https://raw.githubusercontent.com/udacity/RoboND-Localization-Project/master/config/local_costmap_params.yaml
+```
 
-
-$ cd /home/workspace/catkin_ws/
-$ roslaunch udacity_bot udacity_world.launch
+```
+cd /home/workspace/catkin_ws/
+roslaunch udacity_bot udacity_world.launch
+```
 In a new terminal,
-$ roslaunch udacity_bot amcl.launch
+```
+roslaunch udacity_bot amcl.launch
+```
 
 In Rviz,
 * Select “odom” for fixed frame
@@ -724,39 +756,50 @@ The pose your robot starts with places it somewhere in the middle of a corridor.
 You can easily carry out these tests using the 2D Nav Goal button in RViz’ toolbar, as we covered in another section.
 ## 10B-Launching ##
 The above method is great for testing, but for your project submission your robot needs to navigate to a specific goal position while localizing itself along the way. In the project repo we have provided you with a C++ node that will navigate the robot to the goal position for you. You will need to create a new folder for that.
-$ cd /home/workspace/catkin_ws/src/udacity_bot
-$ mkdir src
-$ cd src
-$ wget https://raw.githubusercontent.com/udacity/RoboND-Localization-Project/master/src/navigation_goal.cpp
-
+```
+cd /home/workspace/catkin_ws/src/udacity_bot
+mkdir src
+cd src
+wget https://raw.githubusercontent.com/udacity/RoboND-Localization-Project/master/src/navigation_goal.cpp
+```
 
 In order to use or launch this node, you will first need to compile it. Fortunately, ROS can handle that for you. You will have to modify your CMakeLists.txt file for that.
-$ cd /home/workspace/catkin_ws/src/udacity_bot
+```
+cd /home/workspace/catkin_ws/src/udacity_bot
+```
 
 Replace this file with the file present in the repo. 
-$ wget https://raw.githubusercontent.com/udacity/RoboND-Localization-Project/master/CMakeLists.txt
-
+```
+wget https://raw.githubusercontent.com/udacity/RoboND-Localization-Project/master/CMakeLists.txt
+```
 
 Then,
-$ cd /home/workspace/catkin_ws
-$ catkin_make
-$ source devel/setup.bash
+```
+cd /home/workspace/catkin_ws
+catkin_make
+source devel/setup.bash
+```
 
 Launch (in 3 terminals):
-$ cd /home/workspace/catkin_ws/
-$ source devel/setup.bash
-$ roslaunch udacity_bot udacity_world.launch
+```
+cd /home/workspace/catkin_ws/
+source devel/setup.bash
+roslaunch udacity_bot udacity_world.launch
+```
 
-
-$ cd /home/workspace/catkin_ws/
-$ source devel/setup.bash
-$ roslaunch udacity_bot amcl.launch
+```
+cd /home/workspace/catkin_ws/
+source devel/setup.bash
+roslaunch udacity_bot amcl.launch
+```
 (NOTE: at this point you can still set the 2D navigation goal manually on RVIZ)
 
 
-$ cd /home/workspace/catkin_ws/
-$ source devel/setup.bash
-$ rosrun udacity_bot navigation_goal
+```
+cd /home/workspace/catkin_ws/
+source devel/setup.bash
+rosrun udacity_bot navigation_goal
+```
 
 The above will run the node, and you will notice your robot moving to the goal position.
 You can also display the goal position in RViz using the “Pose” display. Try it out!
