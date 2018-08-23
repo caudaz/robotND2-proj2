@@ -97,13 +97,13 @@ This project involves:
 The basic model for GAZEBO is defined in the URDF folder:
 udacity\_bot.xacro (XML file) . It defines:
 
--   geometry (for visual and collision)
+* geometry (for visual and collision)
 
--   mass/inertia
+* mass/inertia
 
--   links (rigid bodies)
+* links (rigid bodies)
 
--   joints
+* joints
 
 It consists of a base(blue), two actuators (wheels in green joined by a
 differential model), a camera (red), and a laser sensor (gray/black):
@@ -116,21 +116,21 @@ Since the URDF file cannot perform actions such as take images during
 simulation, plugins (included in the udacity\_bot.gazebo file) are used
 for:
 
--   camera sensor
+* camera sensor
 
--   Hokuyo sensor
+* Hokuyo sensor
 
--   controlling the wheel joints (libgazebo_ros_diff_drive.so)
+* controlling the wheel joints (libgazebo_ros_diff_drive.so)
 
 ## RVIZ Integration ##
 
 To visualize any type of sensor data being published over a ROS topic, RVIZ is used for:
 
--   camera images
+* camera images
 
--   points cloud from laser
+* points cloud from laser
 
--   maps
+* maps
 
 ## GAZEBO Map ##
 
@@ -145,16 +145,16 @@ computationally more efficient than MCL.
 
 ## Navigation Stack ##
 
-The move\_base package from ROS will be used, so that a goal position
+The move_base package from ROS will be used, so that a goal position
 can be defined in RVIZ and the robot will navigate to it. It uses
 costmap, which divides the map into occupied and unoccupied areas. The
 package has:
 
--   built-in correction to navigate around obstacles
+* built-in correction to navigate around obstacles
 
--   detect if the robot is stuck
+* detect if the robot is stuck
 
--   rotate until it finds a clear path ahead
+* rotate until it finds a clear path ahead
 
 The local costmap only displays what the laser sensor captures during
 that time period:
@@ -179,14 +179,14 @@ Parameters in the config and launch folders were modified to allow the
 robot to reach the goal in an accurate and timely manner. All parameters
 were tested/tuned to balance the tradeoff between accuracy and
 computational cost:
--transform tolerance : higher delay (faster processing), lower delay (more accurante transforms between coordinate systems)
--update/publish frequencies: higher freq (more accuracy for location), lower freq (faster processing)
--obstacle/clear range: higher distance (clears noise, more obstacles)
--inflation radius : helps to clear obstacles, but could narrow passages if too high
--maps size width and height + resolution: the higher the better for accuracy, but too much computational time and memory usage
--amcl min/max particles: since the algorithm can vary the # of particles (compared to MCL), min too low not enough accuracy, max too high too much computational time
--laser likelihood_field is more computationally efficient and reliable
--odom diff-corrected type drives the robot, but also has the equations for a differential going on a turn
+* transform tolerance : higher delay (faster processing), lower delay (more accurante transforms between coordinate systems)
+* update/publish frequencies: higher freq (more accuracy for location), lower freq (faster processing)
+* obstacle/clear range: higher distance (clears noise, more obstacles)
+* inflation radius : helps to clear obstacles, but could narrow passages if too high
+* maps size width and height + resolution: the higher the better for accuracy, but too much computational time and memory usage
+* amcl min/max particles: since the algorithm can vary the # of particles (compared to MCL), min too low not enough accuracy, max too high too much computational time
+* laser likelihood_field is more computationally efficient and reliable
+* odom diff-corrected type drives the robot, but also has the equations for a differential going on a turn
 
 costmap_common_params.yaml
 ```
