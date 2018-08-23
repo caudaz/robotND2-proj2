@@ -28,14 +28,14 @@ cd ~/catkin_ws/src
 
 catkin_init_workspace
 
-git clone <https://github.com/caudaz/robotND2-proj2>
+git clone https://github.com/caudaz/robotND2-proj2
 
 cd ~/catkin_ws
 
-catkin\_make
+catkin_make
 
 ```
-TERMINAL1
+TERMINAL1 (launches GAZEBO and RVIZ)
 
 ```
 cd ~/catkin_ws
@@ -45,7 +45,7 @@ source devel/setup.bash
 roslaunch udacity_bot udacity_world.launch
 
 ```
-TERMINAL2
+TERMINAL2 (launches AMCL node)
 
 ```
 cd ~/catkin_ws
@@ -58,7 +58,7 @@ roslaunch udacity_bot amcl.launch
 (NOTE: at this point you can still set the 2D navigation goal manually
 on RVIZ)
 
-TERMINAL3
+TERMINAL3 (launches navigation goal)
 
 ```
 cd ~/catkin_ws
@@ -178,7 +178,15 @@ maps. Below is a comparison of a R=0.1m vs. R=10.0m parameter:
 Parameters in the config and launch folders were modified to allow the
 robot to reach the goal in an accurate and timely manner. All parameters
 were tested/tuned to balance the tradeoff between accuracy and
-computational cost.
+computational cost:
+-transform tolerance : higher delay (faster processing), lower delay (more accurante transforms between coordinate systems)
+-update/publish frequencies: higher freq (more accuracy for location), lower freq (faster processing)
+-obstacle/clear range: higher distance (clears noise, more obstacles)
+-inflation radius : helps to clear obstacles, but could narrow passages if too high
+-maps size width and height + resolution: the higher the better for accuracy, but too much computational time and memory usage
+-amcl min/max particles: since the algorithm can vary the # of particles (compared to MCL), min too low not enough accuracy, max too high too much computational time
+-laser likelihood_field is more computationally efficient and reliable
+-odom diff-corrected type drives the robot, but also has the equations for a differential going on a turn
 
 costmap_common_params.yaml
 ```
